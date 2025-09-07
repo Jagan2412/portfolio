@@ -29,6 +29,31 @@
 
     .controls{display:flex;align-items:center;gap:10px}
 
+    /* Download button */
+    .btn-download{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:10px;
+      font-weight:700;
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:white;
+      box-shadow:0 6px 18px rgba(0,0,0,0.45);
+      border: none;
+      cursor:pointer;
+      text-decoration:none;
+      transition:transform .12s, box-shadow .12s, opacity .12s;
+    }
+    .btn-download i{font-size:16px}
+    .btn-download:active{transform:translateY(1px)}
+    .btn-download.secondary{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.06);
+      color:var(--text);
+      box-shadow:none;
+    }
+
     .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:36px}
     .hero-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:28px;border-radius:16px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
     h1{margin:0;font-size:clamp(26px,4vw,44px);line-height:1.02}
@@ -68,6 +93,7 @@
     @media (max-width:980px){
       .hero{grid-template-columns:1fr;}
       .grid{grid-template-columns:repeat(2,1fr)}
+      /* show the header Download button and profile download differently on narrower screens */
     }
     @media (max-width:600px){
       .wrap{padding:12px;margin:16px}
@@ -75,6 +101,13 @@
       .grid{grid-template-columns:1fr}
       .profile-card .avatar{height:140px;width:140px}
       header{gap:6px}
+      /* On small screens: hide the header control button and show inline button in profile card */
+      .controls .btn-download.header-only{display:none}
+      .profile-download{display:block;margin-top:14px}
+    }
+    @media (min-width:601px){
+      /* On larger screens: show header button, hide profile inline download */
+      .profile-download{display:none}
     }
     @media (max-width:480px){
       .companies-grid{grid-template-columns:1fr !important}
@@ -97,7 +130,6 @@
     <header>
       <div class="brand" id="brand-root"></div>
       <nav id="nav-root"></nav>
-      <div class="controls" id="controls-root"></div>
     </header>
 
     <main id="main-root"></main>
@@ -112,8 +144,8 @@
         title: "Jagan M — Portfolio",
         brandInitials: "JM",
         name: "Jagan M",
-        subtitle: "Full-Stack Developer · Angular & .NET",
-        experienceText: "7+ years experience",
+        subtitle: "Senior Full-Stack Developer · Angular & .NET",
+        experienceText: "Senior Software Engineer",
         profileImage: "profile.png", // path or URL
       },
       nav: [
@@ -204,56 +236,67 @@
       });
     }
 
-    function renderControls(root, meta) {
-      root.innerHTML = '';
-      const span = el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText);
-      root.appendChild(span);
-    }
+	function renderControls(root, meta) {
+	  root.innerHTML = '';
+	  const span = el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText);
+	  root.appendChild(span);
+	}
+
 
     // ---------- Build main content ----------
     function renderHero(container, hero, meta, chips) {
-      const section = el('section', { class: 'hero', id: 'about' });
-      const left = el('div', { class: 'hero-card fade-up' }, [
-        el('h1', {}, hero.heading),
-        el('p', { class: 'lead' }, hero.lead)
+  const section = el('section', { class: 'hero', id: 'about' });
+
+  const left = el('div', { class: 'hero-card fade-up' }, [
+    el('h1', {}, hero.heading),
+    el('p', { class: 'lead' }, hero.lead)
+  ]);
+
+  if (Array.isArray(chips) && chips.length) {
+    const chipsRow = el('div', { class: 'chips' });
+    chips.forEach(ch => {
+      const chipEl = el('div', { class: 'chip' }, [
+        el('span', { class: 'dot' }), ch
       ]);
+      chipsRow.appendChild(chipEl);
+    });
+    left.appendChild(chipsRow);
+  }
 
-      // chips row
-      if (Array.isArray(chips) && chips.length) {
-        const chipsRow = el('div', { class: 'chips' });
-        chips.forEach(ch => {
-          const chipEl = el('div', { class: 'chip' }, [
-            el('span', { class: 'dot' }), ch
-          ]);
-          chipsRow.appendChild(chipEl);
-        });
-        left.appendChild(chipsRow);
-      }
-
-      const right = el('aside', { class: 'profile-card fade-up fade-up-delay' });
+  const right = el('aside', { class: 'profile-card fade-up fade-up-delay' });
       const avatar = el('div', { class: 'avatar', role: 'img', 'aria-label': 'Profile image' }, [
         el('img', { src: "https://media.licdn.com/dms/image/v2/C5603AQFU_G7mYjWfjA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1630418787101?e=1759968000&v=beta&t=kQ_hCtsIEw3Zo1lhG-CDo2wyXbz-QzKbMuTo9FYZ4pI", alt: 'Profile photo' })
       ]);
-      const info = el('div', {}, [
-        el('div', { style: 'font-weight:700;margin-top:14px' }, 'Experience'),
-        el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText),
-        (() => {
-          const socials = el('div', { class: 'socials' });
-          (siteData.socials||[]).forEach(s => {
-            const a = el('a', { href: s.link, target: '_blank', rel: 'noopener noreferrer' }, el('i', { class: s.icon }));
-            socials.appendChild(a);
-          });
-          return socials;
-        })()
-      ]);
+  const info = el('div', {}, [
+    el('div', { style: 'font-weight:700;margin-top:14px' }, 'Jagan M'),
+    el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText),
+    (() => {
+      const socials = el('div', { class: 'socials' });
+      (siteData.socials||[]).forEach(s => {
+        const a = el('a', { href: s.link, target: '_blank', rel: 'noopener noreferrer' }, el('i', { class: s.icon }));
+        socials.appendChild(a);
+      });
+      return socials;
+    })()
+  ]);
 
-      right.appendChild(avatar);
-      right.appendChild(info);
+  // ✅ Download CV button ONLY here (bottom of profile)
+const profileDownload = el('a', {
+  class: 'btn-download',
+  href: 'cv-jagan-m.pdf',   // change filename or URL as needed
+  target: '_blank',
+  rel: 'noopener noreferrer'
+}, [el('i', { class: 'bi bi-cloud-arrow-down' }), 'View CV']);
 
-      section.appendChild(left);
-      section.appendChild(right);
-      container.appendChild(section);
-    }
+  right.appendChild(avatar);
+  right.appendChild(info);
+  right.appendChild(profileDownload);
+
+  section.appendChild(left);
+  section.appendChild(right);
+  container.appendChild(section);
+}
+
 
     function renderSkillSection(container, id, title, items) {
       const sec = el('section', { id, class: 'section' });
@@ -324,7 +367,6 @@
       // Header
       renderHeader(document.getElementById('brand-root'), siteData);
       renderNav(document.getElementById('nav-root'), siteData.nav || []);
-      renderControls(document.getElementById('controls-root'), siteData.meta);
 
       // Main content
       const main = document.getElementById('main-root');
