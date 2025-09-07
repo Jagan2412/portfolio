@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Portfolio — Dynamic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root{
+      --bg:#0f1724; --bg-2:#071025; --card:#0b1220; --muted:#94a3b8; --text:#e6eef8; --accent1:#7c3aed; --accent2:#06b6d4;
+      --glass: rgba(255,255,255,0.04);
+      --maxwide:1100px;
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg) 0%, var(--bg-2) 100%);color:var(--text)}
+    a{color:inherit;text-decoration:none}
+
+    .wrap{max-width:var(--maxwide);margin:32px auto;padding:24px}
+
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white}
+    nav{display:flex;gap:12px;align-items:center}
+    nav a{padding:8px 12px;border-radius:10px;font-weight:600;color:var(--muted)}
+    nav a:hover{background:var(--glass);color:var(--accent2)}
+
+    .controls{display:flex;align-items:center;gap:10px}
+
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:36px}
+    .hero-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:28px;border-radius:16px;box-shadow:0 8px 30px rgba(2,6,23,0.06)}
+    h1{margin:0;font-size:clamp(26px,4vw,44px);line-height:1.02}
+    p.lead{color:var(--muted);margin-top:12px;font-size:16px}
+
+    /* chips */
+    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .chip{background:rgba(255,255,255,0.02);color:var(--text);padding:8px 14px;border-radius:999px;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.03);box-shadow:inset 0 -6px 12px rgba(2,6,23,0.12);transition:transform .12s}
+    .chip:hover{transform:translateY(-4px);box-shadow:0 6px 18px rgba(0,0,0,0.45)}
+    .chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:-1px;background:linear-gradient(135deg,var(--accent1),var(--accent2))}
+
+    .profile-card{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);text-align:center} 
+    .avatar{width:180px;height:180px;border-radius:50%;overflow:hidden;margin:0 auto;box-shadow:0 8px 20px rgba(0,0,0,0.6);border:4px solid var(--accent2)}
+    .avatar img{width:95%;height:100%;object-fit:cover;border-radius:50%}
+
+    .section{margin-top:36px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:16px;border-radius:12px;transition:transform .3s, box-shadow .3s}
+    .card:hover{transform:translateY(-6px);box-shadow:0 10px 25px rgba(0,0,0,0.4)}
+    .card h3{margin:0 0 8px 0}
+    .card p{color:var(--muted);font-size:14px}
+
+    .companies-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px}
+    .company-card{background:var(--card);padding:20px;border-radius:14px;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.4);transition:transform .3s, box-shadow .3s}
+    .company-card:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,0.6)}
+    .company-card h3{margin:0;font-size:18px;color:var(--accent2)}
+    .company-card span{font-size:13px;color:var(--muted);display:block;margin-bottom:8px}
+    .company-card p{font-size:14px;color:var(--text);line-height:1.4}
+
+    .contact-card{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .contact-card .icon{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;flex-shrink:0}
+    .contact-card .content{min-width:0}
+    .contact-card .content .muted{word-break:break-word}
+
+    footer{margin-top:40px;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);display:flex;justify-content:space-between;gap:12px;align-items:center}
+
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;}
+      .grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:600px){
+      .wrap{padding:12px;margin:16px}
+      nav{display:none}
+      .grid{grid-template-columns:1fr}
+      .profile-card .avatar{height:140px;width:140px}
+      header{gap:6px}
+    }
+    @media (max-width:480px){
+      .companies-grid{grid-template-columns:1fr !important}
+      .contact-card{gap:12px}
+      .contact-card .icon{width:48px;height:48px;font-size:18px}
+      .avatar{width:140px;height:140px}
+    }
+
+    .fade-up{transform:translateY(8px);opacity:0;animation:up .7s ease forwards}
+    .fade-up-delay{animation-delay:.12s}
+    @keyframes up{to{transform:none;opacity:1}}
+
+    .muted{color:var(--muted)}
+    .socials{display:flex;gap:10px;justify-content:center;margin-top:12px}
+    .socials a{padding:8px;border-radius:10px;background:rgba(255,255,255,0.02)}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="page-root">
+    <header>
+      <div class="brand" id="brand-root"></div>
+      <nav id="nav-root"></nav>
+      <div class="controls" id="controls-root"></div>
+    </header>
+
+    <main id="main-root"></main>
+
+    <footer id="footer-root"></footer>
+  </div>
+
+  <script>
+    // ---------- Example JSON data (edit this to change the whole site) ----------
+    const siteData = {
+      meta: {
+        title: "Jagan M — Portfolio",
+        brandInitials: "JM",
+        name: "Jagan M",
+        subtitle: "Full-Stack Developer · Angular & .NET",
+        experienceText: "7+ years experience",
+        profileImage: "profile.png", // path or URL
+      },
+      nav: [
+        { id: "about", label: "About" },
+        { id: "professional", label: "Professional Skills" },
+        { id: "crossskills", label: "Cross Skills" },
+        { id: "companies", label: "Companies" },
+        { id: "contact", label: "Contact" }
+      ],
+      hero: {
+        heading: "Hi — I'm Jagan. I build modern web apps with Angular & .NET.",
+        lead: "7+ years of professional experience as a Full-stack Software Engineer with strong problem-solving, organizing, communication and extensive experience in developing web applications and mobile applications. Self-motivated and excellent abilities to learn new languages quickly, excellent interpersonal skills and ability to work in a team environment."
+      },
+      /* --- chips array: edit these to change the pills shown under hero --- */
+      skillsChips: [
+        "Angular","TypeScript","Micro Frontends","C#",".NET Framework",".NET CORE","Micro Services","CI/CD"
+      ],
+      professionalSkills: [
+        { title: "Angular", icon: "bi bi-code-slash", desc: "Expertise in building scalable, modular, and dynamic front-end applications using Angular, with strong knowledge of RxJS and state management." },
+        { title: "ASP.NET MVC / Web API / Core", icon: "bi bi-code-slash", desc: "Extensive experience in building scalable backend systems using ASP.NET MVC, Web API, and ASP.NET Core." },
+        { title: "JavaScript / jQuery", icon: "bi bi-braces", desc: "Proficient in modern JavaScript (ES6+) and jQuery for building interactive and dynamic front-end components." },
+        { title: "HTML & CSS", icon: "bi bi-window", desc: "Skilled at creating responsive, accessible, and visually appealing web pages using HTML5 and CSS3." },
+        { title: "MS SQL", icon: "bi bi-database", desc: "Strong experience designing and optimizing relational databases, writing queries, and ensuring data integrity." }
+      ],
+      crossSkills: [
+        { title: "DevOps Practices", icon: "bi bi-diagram-3", desc: "Hands-on with CI/CD pipelines, containerization, and deployment automation." },
+        { title: "Docker", icon: "bi bi-box", desc: "Experience in containerization, creating images, and deploying applications using Docker." },
+        { title: "CI/CD Tools", icon: "bi bi-git", desc: "Practical exposure to Jenkins, TeamCity, and GitLab pipelines for continuous integration and delivery." },
+        { title: "Cloud Exposure", icon: "bi bi-cloud", desc: "Familiar with cloud platforms like Azure and OpenShift for application deployment and scaling." },
+        { title: "AI/ML Enthusiasm", icon: "bi bi-cpu", desc: "Exploring Generative AI and ML.NET to bring intelligence into enterprise solutions." }
+      ],
+      companies: [
+        { name: "Barclays", period: "2022 — Present", desc: "Full Stack Developer — Working on enterprise financial solutions using .NET, Angular, Micro Frontends, and CI/CD pipelines." },
+        { name: "Mindtree Private Limited", period: "2019 — 2022", desc: "Full Stack Developer — Built scalable Angular & .NET solutions, implemented Micro Frontends, and automated deployments." },
+        { name: "iSolve Technologies Private Limited", period: "2018 — 2019", desc: "Worked on developing enterprise applications, contributing to frontend and backend modules." }
+      ],
+      contact: [
+        { kind: "Phone", icon: "bi bi-telephone-fill", value: "+91 978-709-2412", link: "tel:+919787092412", gradient: "linear-gradient(135deg,var(--accent1),var(--accent2))" },
+        { kind: "Email", icon: "bi bi-envelope-fill", value: "Jaganjaym@gmail.com", link: "mailto:Jaganjaym@gmail.com", gradient: "linear-gradient(135deg,var(--accent2),var(--accent1))" },
+        { kind: "WhatsApp", icon: "bi bi-whatsapp", value: "+91 978-709-2412", link: "https://wa.me/919787092412", gradient: "linear-gradient(135deg,var(--accent1),#10b981)" },
+        { kind: "LinkedIn", icon: "bi bi-linkedin", value: "linkedin.com/in/jaganm", link: "https://www.linkedin.com/in/jagan-m-37892313a/", gradient: "linear-gradient(135deg,#0e76a8,var(--accent1))" }
+      ],
+      socials: [
+        { icon: "bi bi-telephone-fill", link: "tel:+919787092412" },
+        { icon: "bi bi-envelope-fill", link: "mailto:Jaganjaym@gmail.com" },
+        { icon: "bi bi-whatsapp", link: "https://wa.me/919787092412" },
+        { icon: "bi bi-linkedin", link: "https://www.linkedin.com/in/jagan-m-37892313a/" }
+      ],
+      footer: {
+        footerText: "Built with ❤️"
+      }
+    };
+
+    // ---------- Rendering helpers ----------
+    function el(tag, attrs = {}, children = []) {
+      const e = document.createElement(tag);
+      for (const k in attrs) {
+        if (k === 'class') e.className = attrs[k];
+        else if (k === 'html') e.innerHTML = attrs[k];
+        else e.setAttribute(k, attrs[k]);
+      }
+      (Array.isArray(children) ? children : [children]).forEach(c => {
+        if (c == null) return;
+        if (typeof c === 'string') e.appendChild(document.createTextNode(c));
+        else e.appendChild(c);
+      });
+      return e;
+    }
+
+    // ---------- Build brand / header ----------
+    function renderHeader(root, data) {
+      root.innerHTML = '';
+      const logo = el('div', { class: 'logo' }, data.meta.brandInitials || '');
+      const info = el('div', {}, [
+        el('div', { style: 'font-weight:800' }, data.meta.name),
+        el('div', { class: 'muted', style: 'font-size:12px' }, data.meta.subtitle)
+      ]);
+      root.appendChild(logo);
+      root.appendChild(info);
+    }
+
+    function renderNav(root, navItems) {
+      root.innerHTML = '';
+      navItems.forEach(it => {
+        const a = el('a', { href: '#' + it.id }, it.label);
+        root.appendChild(a);
+      });
+    }
+
+    function renderControls(root, meta) {
+      root.innerHTML = '';
+      const span = el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText);
+      root.appendChild(span);
+    }
+
+    // ---------- Build main content ----------
+    function renderHero(container, hero, meta, chips) {
+      const section = el('section', { class: 'hero', id: 'about' });
+      const left = el('div', { class: 'hero-card fade-up' }, [
+        el('h1', {}, hero.heading),
+        el('p', { class: 'lead' }, hero.lead)
+      ]);
+
+      // chips row
+      if (Array.isArray(chips) && chips.length) {
+        const chipsRow = el('div', { class: 'chips' });
+        chips.forEach(ch => {
+          const chipEl = el('div', { class: 'chip' }, [
+            el('span', { class: 'dot' }), ch
+          ]);
+          chipsRow.appendChild(chipEl);
+        });
+        left.appendChild(chipsRow);
+      }
+
+      const right = el('aside', { class: 'profile-card fade-up fade-up-delay' });
+      const avatar = el('div', { class: 'avatar', role: 'img', 'aria-label': 'Profile image' }, [
+        el('img', { src: "https://media.licdn.com/dms/image/v2/C5603AQFU_G7mYjWfjA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1630418787101?e=1759968000&v=beta&t=kQ_hCtsIEw3Zo1lhG-CDo2wyXbz-QzKbMuTo9FYZ4pI", alt: 'Profile photo' })
+      ]);
+      const info = el('div', {}, [
+        el('div', { style: 'font-weight:700;margin-top:14px' }, 'Experience'),
+        el('div', { class: 'muted', style: 'font-size:13px' }, meta.experienceText),
+        (() => {
+          const socials = el('div', { class: 'socials' });
+          (siteData.socials||[]).forEach(s => {
+            const a = el('a', { href: s.link, target: '_blank', rel: 'noopener noreferrer' }, el('i', { class: s.icon }));
+            socials.appendChild(a);
+          });
+          return socials;
+        })()
+      ]);
+
+      right.appendChild(avatar);
+      right.appendChild(info);
+
+      section.appendChild(left);
+      section.appendChild(right);
+      container.appendChild(section);
+    }
+
+    function renderSkillSection(container, id, title, items) {
+      const sec = el('section', { id, class: 'section' });
+      sec.appendChild(el('h2', { style: 'margin:0 0 12px 0' }, title));
+      const grid = el('div', { class: 'grid' });
+      items.forEach((it, idx) => {
+        const card = el('article', { class: 'card fade-up' + (idx % 2 ? ' fade-up-delay' : '') }, [
+          el('h3', {}, [el('i', { class: it.icon }), ' ' + it.title]),
+          el('p', {}, it.desc)
+        ]);
+        grid.appendChild(card);
+      });
+      sec.appendChild(grid);
+      container.appendChild(sec);
+    }
+
+    function renderCompanies(container, companies) {
+      const sec = el('section', { id: 'companies', class: 'section' });
+      sec.appendChild(el('h2', { style: 'margin:0 0 12px 0' }, "Companies I've Worked With"));
+      const grid = el('div', { class: 'companies-grid' });
+      companies.forEach((c, i) => {
+        const card = el('div', { class: 'company-card fade-up' + (i % 2 ? ' fade-up-delay' : '') }, [
+          el('h3', {}, c.name),
+          el('span', {}, c.period),
+          el('p', {}, c.desc)
+        ]);
+        grid.appendChild(card);
+      });
+      sec.appendChild(grid);
+      container.appendChild(sec);
+    }
+
+    function renderContact(container, contacts) {
+      const sec = el('section', { id: 'contact', class: 'section' });
+      sec.appendChild(el('h2', { style: 'margin:0 0 12px 0' }, 'Contact Me'));
+      const grid = el('div', { class: 'companies-grid', style: 'grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;' });
+      contacts.forEach((c, i) => {
+        const card = el('div', { class: 'company-card contact-card fade-up' + (i % 2 ? ' fade-up-delay' : '') });
+        const icon = el('div', { class: 'icon', style: 'background:' + (c.gradient || 'var(--accent1)') }, el('i', { class: c.icon }));
+        const content = el('div', { class: 'content' }, [
+          el('div', { style: 'font-weight:700' }, c.kind),
+          el('div', { class: 'muted' }, (c.link ? el('a', { href: c.link, target: c.link.startsWith('http') ? '_blank' : '_self', rel: c.link.startsWith('http') ? 'noopener noreferrer' : '' }, c.value) : c.value))
+        ]);
+        card.appendChild(icon);
+        card.appendChild(content);
+        grid.appendChild(card);
+      });
+      sec.appendChild(grid);
+      container.appendChild(sec);
+    }
+
+    function renderFooter(root, footer, socials) {
+      root.innerHTML = '';
+      const left = el('div', { class: 'muted' }, ['© ', el('span', { id: 'year' }), ' Jagan M — ' + footer.footerText]);
+      const right = el('div', { class: 'socials' });
+      socials.forEach(s=> {
+        const a = el('a', { href: s.link, target: '_blank', rel: 'noopener noreferrer' }, el('i', { class: s.icon }));
+        right.appendChild(a);
+      });
+      root.appendChild(left);
+      root.appendChild(right);
+    }
+
+    // ---------- Initialization ----------
+    window.addEventListener('load', () => {
+      document.title = siteData.meta.title || document.title;
+
+      // Header
+      renderHeader(document.getElementById('brand-root'), siteData);
+      renderNav(document.getElementById('nav-root'), siteData.nav || []);
+      renderControls(document.getElementById('controls-root'), siteData.meta);
+
+      // Main content
+      const main = document.getElementById('main-root');
+      main.innerHTML = ''; // ensure empty
+      renderHero(main, siteData.hero, siteData.meta, siteData.skillsChips || []);
+      renderSkillSection(main, 'professional', 'Professional Skills', siteData.professionalSkills || []);
+      renderSkillSection(main, 'crossskills', 'Cross Skills', siteData.crossSkills || []);
+      renderCompanies(main, siteData.companies || []);
+      renderContact(main, siteData.contact || []);
+
+      // Footer
+      renderFooter(document.getElementById('footer-root'), siteData.footer, siteData.socials || []);
+
+      // set year
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      // animate fade-up items with staggered delay (re-run to reapply)
+      const fadeEls = Array.from(document.querySelectorAll('.fade-up'));
+      fadeEls.forEach((el, i) => {
+        el.style.animationDelay = (i * 80) + 'ms';
+        el.style.animationFillMode = 'forwards';
+      });
+
+      // optional: smooth scroll for anchors generated by nav
+      document.querySelectorAll('a[href^="#"]').forEach(a=>{
+        const href = a.getAttribute('href');
+        if(!href || href === '#') return;
+        a.addEventListener('click', e=>{
+          e.preventDefault();
+          const id = href.slice(1);
+          const el = document.getElementById(id);
+          if(el){
+            el.scrollIntoView({behavior:'smooth', block:'start'});
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
